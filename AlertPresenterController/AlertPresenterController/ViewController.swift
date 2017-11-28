@@ -35,6 +35,8 @@ class ViewController: UIViewController {
     }
 
     @objc func showAlert() {
+        // I like that it's detached from UIViewController flow, so you don't have to worry about it, but instance
+        // drive approach would be usefull
         let alertPresenter = AlertControllerPresenter.alertPresenter(title: "Title", message: "Message")
         alertPresenter.addDefaultAction(title: "Ok")
         alertPresenter.addDestructiveAction(title: "Delete")

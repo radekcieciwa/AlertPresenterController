@@ -5,6 +5,12 @@ public enum AlertPresentingRule: Int {
     case oneInTime
 }
 
+// TBH, I don't like the static access to it.
+// Maybe it's because it's the only way of accessing. Untestable.
+// The operation queue could be extracted, as it seems an essential to the logic.
+// And also One to One pairing with
+// Maybe it's worth to create an instance wise one with default, like: NotificationCenter, or DispatchQueue.
+// Then you can always inject another instance and make the logic testable as Unit.
 public class AlertControllerPresenter: NSObject {
     
     public class func alertPresenter(title: String, message: String) -> Self {
@@ -20,6 +26,7 @@ public class AlertControllerPresenter: NSObject {
         super.init()
     }
     
+    // Do we extract this part only to have finishOperation handle?
     public func addDefaultAction(title: String, preffered: Bool = false, handler: ((UIAlertAction) -> Swift.Void)? = nil) {
         self.addAction(title: title, style: .default, preffered: preffered, handler: handler)
     }
@@ -54,6 +61,7 @@ public class AlertControllerPresenter: NSObject {
         self.presenterOperation.presentCompletion = completion
 
         let presentationQueue = type(of: self).presentationQueue
+        // I'm not sure about this logic, needs to be rewised, by default it's off, by why it's cancelling
         self.apply(presentingRule: presentingRule, toQueue: presentationQueue)
         presentationQueue.addOperation(self.presenterOperation)
         self.state = .presented
